@@ -205,6 +205,15 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     this.customSettings = customSettings;
     this.contextMenu = contextMenu;
     this.initialUserOnlyScripts = userScripts;
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
+    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
 
     if (plugin != null && plugin.activity != null) {
       plugin.activity.registerForContextMenu(this);
