@@ -412,9 +412,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                                    name: UIWindow.didBecomeHiddenNotification,
                                                    object: window)
 
-            print("WKContentView 클래스가. NotificationCenter에서 옵저버 제거")
+            NSLog("WKContentView 클래스가. NotificationCenter에서 옵저버 제거")
             if let wkContentViewClass = NSClassFromString("WKContentView") {
-                print("WKContentView 클래스가 존재합니다. NotificationCenter에서 옵저버 제거 시작")
+                NSLog("WKContentView 클래스가 존재합니다. NotificationCenter에서 옵저버 제거 시작")
                 NotificationCenter.default.removeObserver(wkContentViewClass,
                                                         name: UIResponder.keyboardWillChangeFrameNotification,
                                                         object: nil)
