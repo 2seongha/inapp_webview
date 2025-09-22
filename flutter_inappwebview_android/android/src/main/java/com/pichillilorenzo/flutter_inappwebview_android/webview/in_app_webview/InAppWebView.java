@@ -269,6 +269,11 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     if (isChromiumWebViewBugFixed || !isChromiumWebView) {
       Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation");
+      Log.d(LOG_TAG, "ABABABABABABABAB");
+      Log.d(LOG_TAG, "ABABABABABABABAB");
+      Log.d(LOG_TAG, "ABABABABABABABAB");
+      Log.d(LOG_TAG, "ABABABABABABABAB");
+      Log.d(LOG_TAG, "ABABABABABABABAB");
       return new InAppWebViewClientCompat(inAppBrowserDelegate);
     } else {
       Log.d(LOG_TAG, "Using InAppWebViewClient implementation");
