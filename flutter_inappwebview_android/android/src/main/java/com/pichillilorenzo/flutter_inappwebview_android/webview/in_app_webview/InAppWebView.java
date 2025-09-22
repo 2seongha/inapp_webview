@@ -245,6 +245,12 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     PackageInfo packageInfo = WebViewCompat.getCurrentWebViewPackage(getContext());
     if (packageInfo == null) {
       Log.d(LOG_TAG, "Using InAppWebViewClient implementation");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
       return new InAppWebViewClient(inAppBrowserDelegate);
     }
 
