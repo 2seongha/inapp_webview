@@ -195,6 +195,8 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
                       @Nullable Map<String, Object> contextMenu, View containerView,
                       List<UserScript> userScripts) {
     super(context, containerView, customSettings.useHybridComposition);
+
+    setFitsSystemWindows(false);
     this.plugin = plugin;
     this.id = id;
     final MethodChannel channel = new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id);
@@ -209,20 +211,25 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     }
   }
 
-    // ✅ 여기에 추가!
-    @Override
-    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            setPadding(0, 0, 0, 0);
-            return insets.replaceSystemWindowInsets(
-                insets.getSystemWindowInsetLeft(),
-                0, // top
-                insets.getSystemWindowInsetRight(),
-                0  // bottom 인셋 제거
-            );
-        }
-        return super.onApplyWindowInsets(insets);
-    }
+  @Override
+  public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+      Log.d("InAppWebView", "onApplyWindowInsets called, insets: " + insets);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+          setPadding(0, 0, 0, 0);
+          // 아래로 줄이기 위해 임의로 100x100 크기로 조절
+          getLayoutParams().width = 100;
+          getLayoutParams().height = 100;
+          requestLayout();
+  
+          return insets.replaceSystemWindowInsets(
+              insets.getSystemWindowInsetLeft(),
+              0,
+              insets.getSystemWindowInsetRight(),
+              0
+          );
+      }
+      return super.onApplyWindowInsets(insets);
+  }
 
   public WebViewClient createWebViewClient(InAppBrowserDelegate inAppBrowserDelegate) {
     // bug https://bugs.chromium.org/p/chromium/issues/detail?id=925887
