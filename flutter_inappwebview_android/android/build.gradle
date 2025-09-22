@@ -53,5 +53,6 @@ android {
         implementation 'androidx.browser:browser:1.8.0'
         implementation 'androidx.appcompat:appcompat:1.6.1'
         implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+        implementation 'androidx.annotation:annotation:1.6.0'  // 최신 버전으로 추가
     }
 }
