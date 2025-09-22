@@ -180,7 +180,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
   public InAppWebView(Context context) {
     super(context);
-    Log.i("InAppWebView", "초기화테스트초기화테스트초기화테스트초기화테스트초기화테스트초기화테스트");
   }
 
   public InAppWebView(Context context, AttributeSet attrs) {
@@ -237,12 +236,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     PackageInfo packageInfo = WebViewCompat.getCurrentWebViewPackage(getContext());
     if (packageInfo == null) {
       Log.d(LOG_TAG, "Using InAppWebViewClient implementation");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      Log.d(LOG_TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAA");
       return new InAppWebViewClient(inAppBrowserDelegate);
     }
 
@@ -261,6 +254,9 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     if (isChromiumWebViewBugFixed || !isChromiumWebView) {
       Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation");
+      Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation2");
+      Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation2");
+      Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation2");
       return new InAppWebViewClientCompat(inAppBrowserDelegate);
     } else {
       Log.d(LOG_TAG, "Using InAppWebViewClient implementation");
