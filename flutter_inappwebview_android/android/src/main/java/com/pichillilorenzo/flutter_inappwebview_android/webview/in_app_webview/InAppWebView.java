@@ -204,25 +204,25 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     this.contextMenu = contextMenu;
     this.initialUserOnlyScripts = userScripts;
 
-    ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() {
-      @Override
-      public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-              return insets.replaceSystemWindowInsets(
-                  insets.getSystemWindowInsetLeft(),
-                  0,
-                  insets.getSystemWindowInsetRight(),
-                  0
-              );
-          }
-          return insets;
-      }
-    });
-    
     if (plugin != null && plugin.activity != null) {
       plugin.activity.registerForContextMenu(this);
     }
   }
+
+    // ✅ 여기에 추가!
+    @Override
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            setPadding(0, 0, 0, 0);
+            return insets.replaceSystemWindowInsets(
+                insets.getSystemWindowInsetLeft(),
+                0, // top
+                insets.getSystemWindowInsetRight(),
+                0  // bottom 인셋 제거
+            );
+        }
+        return super.onApplyWindowInsets(insets);
+    }
 
   public WebViewClient createWebViewClient(InAppBrowserDelegate inAppBrowserDelegate) {
     // bug https://bugs.chromium.org/p/chromium/issues/detail?id=925887
