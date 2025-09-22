@@ -180,6 +180,7 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
   public InAppWebView(Context context) {
     super(context);
+    Log.i("InAppWebView", "초기화테스트초기화테스트초기화테스트초기화테스트초기화테스트초기화테스트");
   }
 
   public InAppWebView(Context context, AttributeSet attrs) {
@@ -205,15 +206,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     this.customSettings = customSettings;
     this.contextMenu = contextMenu;
     this.initialUserOnlyScripts = userScripts;
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
-    Log.d("InAppWebView", "ㅁㄴㅇㄹㅁㄴㅇㄹ: ");
 
     if (plugin != null && plugin.activity != null) {
       plugin.activity.registerForContextMenu(this);
@@ -269,11 +261,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
 
     if (isChromiumWebViewBugFixed || !isChromiumWebView) {
       Log.d(LOG_TAG, "Using InAppWebViewClientCompat implementation");
-      Log.d(LOG_TAG, "ABABABABABABABAB");
-      Log.d(LOG_TAG, "ABABABABABABABAB");
-      Log.d(LOG_TAG, "ABABABABABABABAB");
-      Log.d(LOG_TAG, "ABABABABABABABAB");
-      Log.d(LOG_TAG, "ABABABABABABABAB");
       return new InAppWebViewClientCompat(inAppBrowserDelegate);
     } else {
       Log.d(LOG_TAG, "Using InAppWebViewClient implementation");
