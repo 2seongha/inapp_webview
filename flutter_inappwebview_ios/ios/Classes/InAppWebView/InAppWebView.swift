@@ -411,6 +411,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                                    selector: #selector(onExitFullscreen(_:)),
                                                    name: UIWindow.didBecomeHiddenNotification,
                                                    object: window)
+
+            if let wkContentViewClass = NSClassFromString("WKContentView") {
+                NotificationCenter.default.removeObserver(wkContentViewClass,
+                                                        name: UIResponder.keyboardWillChangeFrameNotification,
+                                                        object: nil)
+                NotificationCenter.default.removeObserver(wkContentViewClass,
+                                                        name: UIResponder.keyboardWillShowNotification,
+                                                        object: nil)
+                NotificationCenter.default.removeObserver(wkContentViewClass,
+                                                        name: UIResponder.keyboardWillHideNotification,
+                                                        object: nil)
+            }
 //        }
         
         if let settings = settings {
