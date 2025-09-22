@@ -61,6 +61,8 @@ import androidx.annotation.RequiresApi;
 import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewCompat;
 import androidx.webkit.WebViewFeature;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.OnApplyWindowInsetsListener;
 
 import com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFlutterPlugin;
 import com.pichillilorenzo.flutter_inappwebview_android.R;
@@ -201,6 +203,22 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     this.customSettings = customSettings;
     this.contextMenu = contextMenu;
     this.initialUserOnlyScripts = userScripts;
+
+    ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() {
+      @Override
+      public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+              return insets.replaceSystemWindowInsets(
+                  insets.getSystemWindowInsetLeft(),
+                  0,
+                  insets.getSystemWindowInsetRight(),
+                  0
+              );
+          }
+          return insets;
+      }
+    });
+    
     if (plugin != null && plugin.activity != null) {
       plugin.activity.registerForContextMenu(this);
     }
