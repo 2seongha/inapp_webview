@@ -368,14 +368,14 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         NSLog("커스텀 키보드 show scrollview inset zero")
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 500)
+        // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 500)
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
         NSLog("커스텀 키보드 hide scrollview inset zero")
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 800)
+        // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 800)
     }
 
     public func prepare() {
