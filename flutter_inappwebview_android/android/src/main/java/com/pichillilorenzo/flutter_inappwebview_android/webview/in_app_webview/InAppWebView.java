@@ -196,13 +196,14 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
                       List<UserScript> userScripts) {
     super(context, containerView, customSettings.useHybridComposition);
 
+    Log.d("InAppWebView", "Insets listener attached!");
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       setOnApplyWindowInsetsListener((v, insets) -> {
         // 키보드 인셋 무시 (화면 크기 변경 방지)
         return insets;
       });
     }
-    
+
     this.plugin = plugin;
     this.id = id;
     final MethodChannel channel = new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id);
