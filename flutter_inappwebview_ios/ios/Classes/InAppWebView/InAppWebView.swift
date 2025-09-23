@@ -2566,8 +2566,9 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func onContentSizeChanged(oldContentSize: CGSize) {
-        channelDelegate?.onContentSizeChanged(oldContentSize: oldContentSize,
-                                              newContentSize: scrollView.contentSize)
+        print("컨텐츠 사이즈 변경됨");
+        // channelDelegate?.onContentSizeChanged(oldContentSize: oldContentSize,
+        //                                       newContentSize: scrollView.contentSize)
     }
     
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
