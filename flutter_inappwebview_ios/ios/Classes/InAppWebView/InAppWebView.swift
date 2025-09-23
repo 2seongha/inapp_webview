@@ -97,25 +97,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
 
-    override public var frame: CGRect {
-        get {
-            return super.frame
-        }
-        set {
-            super.frame = newValue
-            
-            // 무조건 contentInset, scrollIndicatorInsets 모두 0으로 고정
-            scrollView.contentInset = .zero
-            scrollView.scrollIndicatorInsets = .zero
-            
-            // iOS 11 이상에서 자동 보정되는 adjustedContentInset 무시
-            if #available(iOS 11, *) {
-                // adjustedContentInset 을 무시하고 0으로 고정시키려면,
-                // scrollView의 contentInsetAdjustmentBehavior 를 .never로 설정하는 게 근본적 해결책입니다.
-                scrollView.contentInsetAdjustmentBehavior = .never
-            }
-        }
-    }
     // override public var frame: CGRect {
     //     get {
     //         return super.frame
@@ -123,18 +104,37 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     //     set {
     //         super.frame = newValue
             
-    //         self.scrollView.contentInset = .zero
+    //         // 무조건 contentInset, scrollIndicatorInsets 모두 0으로 고정
+    //         scrollView.contentInset = .zero
+    //         scrollView.scrollIndicatorInsets = .zero
+            
+    //         // iOS 11 이상에서 자동 보정되는 adjustedContentInset 무시
     //         if #available(iOS 11, *) {
-    //             // Above iOS 11, adjust contentInset to compensate the adjustedContentInset so the sum will
-    //             // always be 0.
-    //             if (scrollView.adjustedContentInset != UIEdgeInsets.zero) {
-    //                 let insetToAdjust = self.scrollView.adjustedContentInset
-    //                 scrollView.contentInset = UIEdgeInsets(top: -insetToAdjust.top, left: -insetToAdjust.left,
-    //                                                             bottom: -insetToAdjust.bottom, right: -insetToAdjust.right)
-    //             }
+    //             // adjustedContentInset 을 무시하고 0으로 고정시키려면,
+    //             // scrollView의 contentInsetAdjustmentBehavior 를 .never로 설정하는 게 근본적 해결책입니다.
+    //             scrollView.contentInsetAdjustmentBehavior = .never
     //         }
     //     }
     // }
+    override public var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            super.frame = newValue
+            
+            self.scrollView.contentInset = .zero
+            if #available(iOS 11, *) {
+                // Above iOS 11, adjust contentInset to compensate the adjustedContentInset so the sum will
+                // always be 0.
+                if (scrollView.adjustedContentInset != UIEdgeInsets.zero) {
+                    let insetToAdjust = self.scrollView.adjustedContentInset
+                    scrollView.contentInset = UIEdgeInsets(top: -insetToAdjust.top, left: -insetToAdjust.left,
+                                                                bottom: -insetToAdjust.bottom, right: -insetToAdjust.right)
+                }
+            }
+        }
+    }
     
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
@@ -364,19 +364,19 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
 
-    @objc func keyboardWillShow(_ notification: Notification) {
-        NSLog("커스텀 키보드 show scrollview inset zero")
-        scrollView.contentInset = .zero
-        scrollView.scrollIndicatorInsets = .zero
-        // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 500)
-    }
+    // @objc func keyboardWillShow(_ notification: Notification) {
+    //     NSLog("커스텀 키보드 show scrollview inset zero")
+    //     scrollView.contentInset = .zero
+    //     scrollView.scrollIndicatorInsets = .zero
+    //     // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 500)
+    // }
 
-    @objc func keyboardWillHide(_ notification: Notification) {
-        NSLog("커스텀 키보드 hide scrollview inset zero")
-        scrollView.contentInset = .zero
-        scrollView.scrollIndicatorInsets = .zero
-        // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 800)
-    }
+    // @objc func keyboardWillHide(_ notification: Notification) {
+    //     NSLog("커스텀 키보드 hide scrollview inset zero")
+    //     scrollView.contentInset = .zero
+    //     scrollView.scrollIndicatorInsets = .zero
+    //     // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 800)
+    // }
 
     public func prepare() {
         scrollView.addGestureRecognizer(self.longPressRecognizer)
@@ -387,22 +387,22 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentSize), options: [.new, .old], context: nil)
         if let wkContentViewClass = NSClassFromString("WKContentView") {
             NSLog("키보드 옵저버 제거")
-            NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-            NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillHideNotification, object: nil)
+            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillShowNotification, object: nil)
+            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillHideNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         }
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow(_:)),
-                                               name: UIResponder.keyboardWillShowNotification,
-                                               object: nil)
+        // NotificationCenter.default.addObserver(self,
+        //                                        selector: #selector(keyboardWillShow(_:)),
+        //                                        name: UIResponder.keyboardWillShowNotification,
+        //                                        object: nil)
 
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide(_:)),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
+        // NotificationCenter.default.addObserver(self,
+        //                                        selector: #selector(keyboardWillHide(_:)),
+        //                                        name: UIResponder.keyboardWillHideNotification,
+        //                                        object: nil)
 
         addObserver(self,
                     forKeyPath: #keyPath(WKWebView.estimatedProgress),
@@ -3323,8 +3323,8 @@ if(window.\(JAVASCRIPT_BRIDGE_NAME)[\(_callHandlerID)] != null) {
         channelDelegate?.dispose()
         channelDelegate = nil
         runWindowBeforeCreatedCallbacks()
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        // NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        // NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
   
         removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
         removeObserver(self, forKeyPath: #keyPath(WKWebView.url))
