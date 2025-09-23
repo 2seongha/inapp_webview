@@ -96,6 +96,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         panGestureRecognizer.addTarget(self, action: #selector(endDraggingDetected))
     }
     
+
     override public var frame: CGRect {
         get {
             return super.frame
@@ -344,6 +345,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
 
+    @objc func keyboardWillShow(_ notification: Notification) {
+        NSLog("커스텀 키보드 show scrollview inset zero")
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        NSLog("커스텀 키보드 hide scrollview inset zero")
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+
     public func prepare() {
         scrollView.addGestureRecognizer(self.longPressRecognizer)
         scrollView.addGestureRecognizer(self.recognizerForDisablingContextMenuOnLinks)
@@ -351,7 +364,16 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.zoomScale), options: [.new, .old], context: nil)
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentSize), options: [.new, .old], context: nil)
-        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+
         addObserver(self,
                     forKeyPath: #keyPath(WKWebView.estimatedProgress),
                     options: .new,
@@ -412,19 +434,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                                                    name: UIWindow.didBecomeHiddenNotification,
                                                    object: window)
 
-            NSLog("WKContentView 클래스가. NotificationCenter에서 옵저버 제거")
-            if let wkContentViewClass = NSClassFromString("WKContentView") {
-                NSLog("WKContentView 클래스가 존재합니다. NotificationCenter에서 옵저버 제거 시작")
-                NotificationCenter.default.removeObserver(wkContentViewClass,
-                                                        name: UIResponder.keyboardWillChangeFrameNotification,
-                                                        object: nil)
-                NotificationCenter.default.removeObserver(wkContentViewClass,
-                                                        name: UIResponder.keyboardWillShowNotification,
-                                                        object: nil)
-                NotificationCenter.default.removeObserver(wkContentViewClass,
-                                                        name: UIResponder.keyboardWillHideNotification,
-                                                        object: nil)
-            }
+           
 //        }
         
         if let settings = settings {
@@ -3282,6 +3292,9 @@ if(window.\(JAVASCRIPT_BRIDGE_NAME)[\(_callHandlerID)] != null) {
         channelDelegate?.dispose()
         channelDelegate = nil
         runWindowBeforeCreatedCallbacks()
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+  
         removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
         removeObserver(self, forKeyPath: #keyPath(WKWebView.url))
         removeObserver(self, forKeyPath: #keyPath(WKWebView.title))
