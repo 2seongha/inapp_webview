@@ -196,7 +196,13 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
                       List<UserScript> userScripts) {
     super(context, containerView, customSettings.useHybridComposition);
 
-    setFitsSystemWindows(false);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      setOnApplyWindowInsetsListener((v, insets) -> {
+        // 키보드 인셋 무시 (화면 크기 변경 방지)
+        return insets;
+      });
+    }
+    
     this.plugin = plugin;
     this.id = id;
     final MethodChannel channel = new MethodChannel(plugin.messenger, METHOD_CHANNEL_NAME_PREFIX + id);
@@ -209,26 +215,6 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     if (plugin != null && plugin.activity != null) {
       plugin.activity.registerForContextMenu(this);
     }
-  }
-
-  @Override
-  public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-      Log.d("InAppWebView", "onApplyWindowInsets called, insets: " + insets);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-          setPadding(0, 0, 0, 0);
-          // 아래로 줄이기 위해 임의로 100x100 크기로 조절
-          getLayoutParams().width = 100;
-          getLayoutParams().height = 100;
-          requestLayout();
-  
-          return insets.replaceSystemWindowInsets(
-              insets.getSystemWindowInsetLeft(),
-              0,
-              insets.getSystemWindowInsetRight(),
-              0
-          );
-      }
-      return super.onApplyWindowInsets(insets);
   }
 
   public WebViewClient createWebViewClient(InAppBrowserDelegate inAppBrowserDelegate) {
