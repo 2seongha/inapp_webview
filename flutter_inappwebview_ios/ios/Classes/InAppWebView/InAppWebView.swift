@@ -385,15 +385,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.zoomScale), options: [.new, .old], context: nil)
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentSize), options: [.new, .old], context: nil)
-        if let wkContentViewClass = NSClassFromString("WKContentView") {
-            NSLog("키보드 옵저버 제거")
-            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillShowNotification, object: nil)
-            // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillHideNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        }
+     
         // NotificationCenter.default.addObserver(self,
         //                                        selector: #selector(keyboardWillShow(_:)),
         //                                        name: UIResponder.keyboardWillShowNotification,
@@ -474,6 +466,18 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 scrollView.backgroundColor = UIColor.clear
             }
             
+            if settings.mediaPlaybackRequiresUserAction {
+                if let wkContentViewClass = NSClassFromString("WKContentView") {
+                    NSLog("키보드 옵저버 제거")
+                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillShowNotification, object: nil)
+                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillHideNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+                }
+            }
+
             // prevent webView from bouncing
             if settings.disallowOverScroll {
                 if responds(to: #selector(getter: scrollView)) {
