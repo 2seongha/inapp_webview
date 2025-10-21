@@ -197,7 +197,7 @@ final public class InAppWebView extends InputAwareWebView implements InAppWebVie
     super(context, containerView, customSettings.useHybridComposition);
 
     // mediaPlaybackRequiresUserGesture 속성으로 인셋 제어함
-    if(customSettings.mediaPlaybackRequiresUserGesture) {
+    if(customSettings.transparentBackground) {
       Log.d("InAppWebView", "Insets listener attached!");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         setOnApplyWindowInsetsListener((v, insets) -> {
