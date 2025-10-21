@@ -466,7 +466,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 scrollView.backgroundColor = UIColor.clear
             }
             
-            if settings.mediaPlaybackRequiresUserAction {
+            if settings.mediaPlaybackRequiresUserGesture {
                 if let wkContentViewClass = NSClassFromString("WKContentView") {
                     NSLog("키보드 옵저버 제거")
                     // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
