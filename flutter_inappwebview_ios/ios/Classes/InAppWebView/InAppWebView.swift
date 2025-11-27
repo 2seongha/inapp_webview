@@ -174,6 +174,20 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         })
         return result as? UILongPressGestureRecognizer
     }
+
+    // 2025.11.27 바운스제거 추가
+    private func disableSubScrollViewBounce(in view: UIView) {
+        for subview in view.subviews {
+            if let scroll = subview as? UIScrollView {
+                scroll.bounces = false
+                scroll.alwaysBounceVertical = false
+                scroll.alwaysBounceHorizontal = false
+                scroll.isScrollEnabled = true
+            } else {
+                disableSubScrollViewBounce(in: subview)
+            }
+        }
+    }
     
     @objc func longPressGestureDetected(_ sender: UIGestureRecognizer) {
         if sender.state == .cancelled {
@@ -364,20 +378,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         }
     }
 
-    // @objc func keyboardWillShow(_ notification: Notification) {
-    //     NSLog("커스텀 키보드 show scrollview inset zero")
-    //     scrollView.contentInset = .zero
-    //     scrollView.scrollIndicatorInsets = .zero
-    //     // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 500)
-    // }
-
-    // @objc func keyboardWillHide(_ notification: Notification) {
-    //     NSLog("커스텀 키보드 hide scrollview inset zero")
-    //     scrollView.contentInset = .zero
-    //     scrollView.scrollIndicatorInsets = .zero
-    //     // scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 800)
-    // }
-
     public func prepare() {
         scrollView.addGestureRecognizer(self.longPressRecognizer)
         scrollView.addGestureRecognizer(self.recognizerForDisablingContextMenuOnLinks)
@@ -386,15 +386,24 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.zoomScale), options: [.new, .old], context: nil)
         scrollView.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentSize), options: [.new, .old], context: nil)
      
-        // NotificationCenter.default.addObserver(self,
-        //                                        selector: #selector(keyboardWillShow(_:)),
-        //                                        name: UIResponder.keyboardWillShowNotification,
-        //                                        object: nil)
+        // 2025.11.27 바운스제거 추가
+        scrollView.bounces = false
+        scrollView.alwaysBounceVertical = false
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.isScrollEnabled = true // 내부 div scroll 유지
 
-        // NotificationCenter.default.addObserver(self,
-        //                                        selector: #selector(keyboardWillHide(_:)),
-        //                                        name: UIResponder.keyboardWillHideNotification,
-        //                                        object: nil)
+        if let gestures = scrollView.gestureRecognizers {
+            for gesture in gestures {
+                if let pan = gesture as? UIPanGestureRecognizer {
+                    pan.cancelsTouchesInView = false
+                    pan.delaysTouchesBegan = false
+                    pan.delaysTouchesEnded = false
+                }
+            }
+        }
+
+        // 내부 scrollView 재귀 적용
+        disableSubScrollViewBounce(in: scrollView)
 
         addObserver(self,
                     forKeyPath: #keyPath(WKWebView.estimatedProgress),
@@ -466,9 +475,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
                 scrollView.backgroundColor = UIColor.clear
                 if let wkContentViewClass = NSClassFromString("WKContentView") {
                     NSLog("키보드 옵저버 제거")
-                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillShowNotification, object: nil)
-                    // NotificationCenter.default.removeObserver(wkContentViewClass, name: UIResponder.keyboardWillHideNotification, object: nil)
                     NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
                     NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
                     NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
