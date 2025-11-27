@@ -174,20 +174,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         })
         return result as? UILongPressGestureRecognizer
     }
-
-    // 2025.11.27 바운스제거 추가
-    private func disableSubScrollViewBounce(in view: UIView) {
-        for subview in view.subviews {
-            if let scroll = subview as? UIScrollView {
-                scroll.bounces = false
-                scroll.alwaysBounceVertical = false
-                scroll.alwaysBounceHorizontal = false
-                scroll.isScrollEnabled = true
-            } else {
-                disableSubScrollViewBounce(in: subview)
-            }
-        }
-    }
     
     @objc func longPressGestureDetected(_ sender: UIGestureRecognizer) {
         if sender.state == .cancelled {
@@ -391,14 +377,21 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         scrollView.alwaysBounceVertical = false
         scrollView.alwaysBounceHorizontal = false
         scrollView.isScrollEnabled = true // 내부 div scroll 유지
+        for subview in scrollView.subviews {
+                NSLog("바운스 효과 제거2")
 
-        if let gestures = scrollView.gestureRecognizers {
-            for gesture in gestures {
-                NSLog("바운스 효과 제거")
-                if let pan = gesture as? UIPanGestureRecognizer {
-                    pan.cancelsTouchesInView = false
-                    pan.delaysTouchesBegan = false
-                    pan.delaysTouchesEnded = false
+            let className = String(describing: type(of: subview))
+            if className == "WKContentView" {
+                // WKContentView gesture 제거/수정
+                if let gestures = subview.gestureRecognizers {
+                    for gesture in gestures {
+                        if let pan = gesture as? UIPanGestureRecognizer {
+                            pan.cancelsTouchesInView = false
+                            pan.delaysTouchesBegan = false
+                            pan.delaysTouchesEnded = false
+                            pan.isEnabled = false // bounce 제거
+                        }
+                    }
                 }
             }
         }
@@ -2574,9 +2567,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
     }
     
     public func onContentSizeChanged(oldContentSize: CGSize) {
-        print("컨텐츠 사이즈 변경됨");
-        // channelDelegate?.onContentSizeChanged(oldContentSize: oldContentSize,
-        //                                       newContentSize: scrollView.contentSize)
+        // print("컨텐츠 사이즈 변경됨");
     }
     
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
