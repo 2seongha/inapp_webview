@@ -394,6 +394,7 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
 
         if let gestures = scrollView.gestureRecognizers {
             for gesture in gestures {
+                NSLog("바운스 효과 제거")
                 if let pan = gesture as? UIPanGestureRecognizer {
                     pan.cancelsTouchesInView = false
                     pan.delaysTouchesBegan = false
