@@ -396,9 +396,6 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
             }
         }
 
-        // 내부 scrollView 재귀 적용
-        disableSubScrollViewBounce(in: scrollView)
-
         addObserver(self,
                     forKeyPath: #keyPath(WKWebView.estimatedProgress),
                     options: .new,
